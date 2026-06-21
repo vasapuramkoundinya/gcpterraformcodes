@@ -1,12 +1,10 @@
 pipeline {
 agent any
 
-```
 environment {
-    TERRAFORM_SCRIPT_COMPOSITION_PATH = "composition/"
-    REPO_NAME = "GCP_TERRAFORM"
-    TERRAFORM_IMAGE_TAG = "1.8.0"
+    REPO_NAME = "gcpterraformcodes"
     TF_DOCKER_IMAGE = "hashicorp/terraform"
+    TERRAFORM_IMAGE_TAG = "1.8.0"
 }
 
 parameters {
@@ -30,14 +28,14 @@ parameters {
 
     choice(
         name: 'TERRAFORM_ENV_FOLDER',
-        choices: ['gcporganizations'],
+        choices: ['dev'],
         description: 'Environment'
     )
 
     choice(
         name: 'TERRAFORM_PROJECT_FOLDER',
         choices: ['project-neuralspun'],
-        description: 'Application'
+        description: 'Project Folder'
     )
 }
 
@@ -46,7 +44,7 @@ stages {
     stage("Parameterizing") {
         steps {
             script {
-                if ("${params.UPDATE_PIPELINE_PARAMETERS}" == "Yes") {
+                if (params.UPDATE_PIPELINE_PARAMETERS == "Yes") {
                     currentBuild.result = 'ABORTED'
                     error('DRY RUN COMPLETED. JOB PARAMETERIZED.')
                 }
@@ -104,11 +102,13 @@ withCredentials([
     )
 ]) {
 
+    def WORKDIR = "/${REPO_NAME}/gcporganizations/composition/${params.GCP_REGION}/${params.TERRAFORM_ENV_FOLDER}/${params.TERRAFORM_PROJECT_FOLDER}"
+
     if (command == "init") {
 
         sh """
             docker run --rm \
-            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            --workdir ${WORKDIR} \
             -v ${WORKSPACE}:/${REPO_NAME} \
             -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
             -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
@@ -121,7 +121,7 @@ withCredentials([
 
         sh """
             docker run --rm \
-            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            --workdir ${WORKDIR} \
             -v ${WORKSPACE}:/${REPO_NAME} \
             -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
             -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
@@ -134,7 +134,7 @@ withCredentials([
 
         sh """
             docker run --rm \
-            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            --workdir ${WORKDIR} \
             -v ${WORKSPACE}:/${REPO_NAME} \
             -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
             -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
@@ -147,7 +147,7 @@ withCredentials([
 
         sh """
             docker run --rm \
-            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            --workdir ${WORKDIR} \
             -v ${WORKSPACE}:/${REPO_NAME} \
             -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
             -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
@@ -161,6 +161,6 @@ withCredentials([
         input "Do you want to apply Terraform?"
     }
 }
-```
+
 
 }
