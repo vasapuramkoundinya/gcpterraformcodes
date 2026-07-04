@@ -1,0 +1,177 @@
+pipeline {
+agent any
+
+environment {
+    REPO_NAME = "gcpterraformcodes"
+    TF_DOCKER_IMAGE = "hashicorp/terraform"
+    TERRAFORM_IMAGE_TAG = "1.8.0"
+}
+
+parameters {
+
+    choice(
+        name: 'UPDATE_PIPELINE_PARAMETERS',
+        choices: ['No', 'Yes'],
+        description: 'Do you wish to do a dry run to grab parameters?'
+    )
+
+    choice(
+        name: 'GCP_CRED_ID',
+        choices: ['terraform-sa'],
+        description: 'GCP Service Account Credential'
+    )
+
+    choice(
+        name: 'GCP_REGION',
+        choices: ['us-central1'],
+        description: 'GCP Region'
+    )
+
+    choice(
+        name: 'TERRAFORM_ENV_FOLDER',
+        choices: ['dev'],
+        description: 'Environment'
+    )
+
+    choice(
+        name: 'TERRAFORM_PROJECT_FOLDER',
+        choices: ['compute-components'],
+        description: 'Project Folder'
+    )
+}
+
+stages {
+
+    stage("Parameterizing") {
+        steps {
+            script {
+                if (params.UPDATE_PIPELINE_PARAMETERS == "Yes") {
+                    currentBuild.result = 'ABORTED'
+                    error('DRY RUN COMPLETED. JOB PARAMETERIZED.')
+                }
+            }
+        }
+    }
+
+    stage("Docker Version") {
+        steps {
+            bat 'docker --version'
+        }
+    }
+
+    stage('Checkout') {
+    steps {
+        checkout scm
+    }
+    }
+
+    stage("Terraform Init") {
+        steps {
+            te("init")
+        }
+    }
+
+    stage("Terraform Validate") {
+        steps {
+            te("validate")
+        }
+    }
+
+    stage("Terraform Plan") {
+        steps {
+            te("plan")
+        }
+    }
+
+    stage("Approve Terraform Plan") {
+        steps {
+            te("approve")
+        }
+    }
+
+    stage("Terraform Apply") {
+        steps {
+            te("apply")
+        }
+    }
+}
+
+post {
+    always {
+        cleanWs()
+    }
+}
+
+
+}
+
+def te(command) {
+
+withCredentials([
+    file(
+        credentialsId: "${params.GCP_CRED_ID}",
+        variable: 'GOOGLE_APPLICATION_CREDENTIALS'
+    )
+]) {
+
+    def WORKDIR = "/${REPO_NAME}/gcporganizations/composition/${params.GCP_REGION}/${params.TERRAFORM_ENV_FOLDER}/${params.TERRAFORM_PROJECT_FOLDER}"
+
+    if (command == "init") {
+
+        bat """
+        docker run --rm ^
+        --workdir ${WORKDIR} ^
+        -v "%WORKSPACE%:/${REPO_NAME}" ^
+        -v "%GOOGLE_APPLICATION_CREDENTIALS%:/tmp/gcp-key.json" ^
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json ^
+        ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} ^
+        init -backend-config=backend.config
+        """
+    }
+
+    else if (command == "validate") {
+
+        bat """
+        docker run --rm ^
+        --workdir ${WORKDIR} ^
+        -v "%WORKSPACE%:/${REPO_NAME}" ^
+        -v "%GOOGLE_APPLICATION_CREDENTIALS%:/tmp/gcp-key.json" ^
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json ^
+        ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} ^
+        validate
+        """
+    }
+
+    else if (command == "plan") {
+
+        bat """
+        docker run --rm ^
+        --workdir ${WORKDIR} ^
+        -v "%WORKSPACE%:/${REPO_NAME}" ^
+        -v "%GOOGLE_APPLICATION_CREDENTIALS%:/tmp/gcp-key.json" ^
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json ^
+        ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} ^
+        plan -out=tfplan -no-color
+        """
+    }
+
+    else if (command == "apply") {
+
+        bat """
+        docker run --rm ^
+        --workdir ${WORKDIR} ^
+        -v "%WORKSPACE%:/${REPO_NAME}" ^
+        -v "%GOOGLE_APPLICATION_CREDENTIALS%:/tmp/gcp-key.json" ^
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json ^
+        ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} ^
+        apply tfplan
+        """
+    }
+
+    else if (command == "approve") {
+
+        input "Do you want to apply Terraform?"
+    }
+}
+
+}
