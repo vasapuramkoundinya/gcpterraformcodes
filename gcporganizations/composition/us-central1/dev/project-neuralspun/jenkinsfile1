@@ -1,0 +1,166 @@
+pipeline {
+agent any
+
+```
+environment {
+    TERRAFORM_SCRIPT_COMPOSITION_PATH = "gcporganizations/"
+    REPO_NAME = "GCP_TERRAFORM"
+    TERRAFORM_IMAGE_TAG = "1.1.8"
+    TF_DOCKER_IMAGE = "hashicorp/terraform"
+}
+
+parameters {
+    choice(
+        name: 'UPDATE_PIPELINE_PARAMETERS',
+        choices: ['No', 'Yes'],
+        description: 'Do you wish to do a dry run to grab parameters?'
+    )
+
+    choice(
+        name: 'GCP_CRED_ID',
+        choices: ['terraform-sa'],
+        description: 'GCP Service Account Credential'
+    )
+
+    choice(
+        name: 'GCP_REGION',
+        choices: ['us-central1'],
+        description: 'GCP Region'
+    )
+
+    choice(
+        name: 'TERRAFORM_ENV_FOLDER',
+        choices: ['gcporganizations'],
+        description: 'Environment'
+    )
+
+    choice(
+        name: 'TERRAFORM_PROJECT_FOLDER',
+        choices: ['project-neuralspun'],
+        description: 'Application'
+    )
+}
+
+stages {
+
+    stage("Parameterizing") {
+        steps {
+            script {
+                if ("${params.UPDATE_PIPELINE_PARAMETERS}" == "Yes") {
+                    currentBuild.result = 'ABORTED'
+                    error('DRY RUN COMPLETED. JOB PARAMETERIZED.')
+                }
+            }
+        }
+    }
+
+    stage("Terraform Init") {
+        steps {
+            te("init")
+        }
+    }
+
+    stage("Terraform Validate") {
+        steps {
+            te("validate")
+        }
+    }
+
+    stage("Terraform Plan") {
+        steps {
+            te("plan")
+        }
+    }
+
+    stage("Approve Terraform Plan") {
+        steps {
+            te("approve")
+        }
+    }
+
+    stage("Terraform Apply") {
+        steps {
+            te("apply")
+        }
+    }
+}
+
+post {
+    always {
+        cleanWs()
+    }
+}
+```
+
+}
+
+def te(command) {
+
+```
+withCredentials([
+    file(
+        credentialsId: "${params.GCP_CRED_ID}",
+        variable: 'GOOGLE_APPLICATION_CREDENTIALS'
+    )
+]) {
+
+    if (command == "init") {
+
+        sh """
+            docker run --rm \
+            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            -v ${WORKSPACE}:/${REPO_NAME} \
+            -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
+            ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} \
+            init -backend-config=backend.config
+        """
+    }
+
+    else if (command == "validate") {
+
+        sh """
+            docker run --rm \
+            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            -v ${WORKSPACE}:/${REPO_NAME} \
+            -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
+            ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} \
+            validate
+        """
+    }
+
+    else if (command == "plan") {
+
+        sh """
+            docker run --rm \
+            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            -v ${WORKSPACE}:/${REPO_NAME} \
+            -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
+            ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} \
+            plan -out=tfplan -no-color
+        """
+    }
+
+    else if (command == "apply") {
+
+        sh """
+            docker run --rm \
+            --workdir /${REPO_NAME}/${TERRAFORM_SCRIPT_COMPOSITION_PATH}/${GCP_REGION}/${TERRAFORM_ENV_FOLDER}/${TERRAFORM_APP_FOLDER} \
+            -v ${WORKSPACE}:/${REPO_NAME} \
+            -v ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/gcp-key.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json \
+            ${TF_DOCKER_IMAGE}:${TERRAFORM_IMAGE_TAG} \
+            apply tfplan
+        """
+    }
+
+    else if (command == "approve") {
+
+        input "Do you want to apply Terraform?"
+    }
+}
+```
+
+}
