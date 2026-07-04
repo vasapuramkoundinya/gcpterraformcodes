@@ -8,7 +8,7 @@
   # By setting this to true, any previous value for bgp_always_compare_med
   # will be cleared, reverting it to the API default.
   bgp_inter_region_cost = "ADD_COST_TO_MED"     
-  delete_bgp_always_compare_med = "true"
+  delete_bgp_always_compare_med = "false"
   deletion_policy = "DELETE"
   delete_default_routes_on_create = "false"
 purpose = "none"
