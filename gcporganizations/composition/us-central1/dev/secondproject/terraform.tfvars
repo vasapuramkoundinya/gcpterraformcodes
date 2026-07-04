@@ -6,6 +6,7 @@
   uniform_bucket_level_access = "true"
   storage_class = "STANDARD"
   retention_period= "604800"
+  enable_versioning = "true"
   enable_retention_policy_lock = "true"
   logging_bucket = "terraform-state-gcp-narasi"
    public_access_prevention = "enabled"
