@@ -59,6 +59,19 @@ stages {
         }
     }
 
+    stage('Checkout') {
+    steps {
+        checkout scm
+    }
+    }
+    stage('Verify Checkout') {
+    steps {
+        bat 'dir %WORKSPACE%'
+        bat 'dir %WORKSPACE%\\resource'
+        bat 'dir %WORKSPACE%\\gcporganizations'
+    }
+    }
+
     stage("Terraform Init") {
         steps {
             te("init")
