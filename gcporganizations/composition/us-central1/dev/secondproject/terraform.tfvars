@@ -9,7 +9,7 @@
   enable_versioning = "true"
   enable_retention_policy_lock = "true"
   logging_bucket = "terraform-state-gcp-narasi"
-   public_access_prevention = "enabled"
+   public_access_prevention = "true"
    #labels = var.labels
    kms_key_name = "projects/neural-sunup-416408/locations/global/keyRings/ebsvolume/cryptoKeys/ebs"
    soft_delete_retention_seconds = "100004"
