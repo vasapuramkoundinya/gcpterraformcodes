@@ -1,7 +1,7 @@
 module "neural_bucket" {
     source = "../../../../resource/gcs"
     name = var.name
-    project = var.project_id
+    project_id = var.project_id
   location      = var.location
   force_destroy = var.force_destroy
   uniform_bucket_level_access = var.uniform_bucket_level_access
