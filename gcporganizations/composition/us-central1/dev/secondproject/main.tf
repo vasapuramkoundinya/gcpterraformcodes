@@ -8,7 +8,7 @@ module "neural_bucket" {
   storage_class = var.storage_class
   retention_period= var.retention_period
   enable_versioning = var.enable_versioning
-  enable_retention_policy_lock = var.var.enable_retention_policy_lock
+  enable_retention_policy_lock = var.enable_retention_policy_lock
   logging_bucket = var.logging_bucket
    public_access_prevention = var.public_access_prevention
    labels = var.labels
