@@ -1,7 +1,7 @@
 variable "location"{}
 variable "force_destroy"{}
 variable "uniform_bucket_level_access"{}
-variable "var.lifecycle_rules"{}
+variable "lifecycle_rules"{}
 variable "lifecycle_rules"{}
 variable "kms_key_name"{}
 variable "storage_class"{}
