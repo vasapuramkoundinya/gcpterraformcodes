@@ -11,7 +11,7 @@
   logging_bucket = "terraform-state-gcp-narasi"
    public_access_prevention = "enforced"
    #labels = var.labels
-   kms_key_name = "projects/neural-sunup-416408/locations/global/keyRings/ebsvolume/cryptoKeys/ebs"
+   kms_key_name = ""#"projects/neural-sunup-416408/locations/global/keyRings/ebsvolume/cryptoKeys/ebs"
    soft_delete_retention_seconds = "604800"
 
    labels = {
