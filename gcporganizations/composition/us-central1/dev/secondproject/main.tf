@@ -1,12 +1,10 @@
 module "neural_bucket" {
-    source = "../../../../../resource/gcs"
+    source = "../../../../resource/gcs"
     name = var.name
     project = var.project_id
   location      = var.location
   force_destroy = var.force_destroy
-
   uniform_bucket_level_access = var.uniform_bucket_level_access
-  
   storage_class = var.storage_class
   retention_period= var.retention_period
   enable_retention_policy_lock = var.var.enable_retention_policy_lock
