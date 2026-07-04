@@ -1,7 +1,7 @@
 
   name = "demo_narry_bt"
   project_id = "neural-sunup-416408"
-  location      = "eurpose-west1"
+  location      = "europe-west1"
   force_destroy = "false"
   uniform_bucket_level_access = "true"
   storage_class = "STANDARD"
