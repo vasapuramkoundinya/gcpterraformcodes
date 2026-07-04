@@ -17,7 +17,7 @@ resource "google_compute_network" "this" {
 resource "google_compute_subnetwork" "subnets" {
 
   for_each = var.subnets
-
+    project       = var.project_id
   name          = each.value.subnet_name
   ip_cidr_range = each.value.subnet_cidr
   region        = each.value.region
