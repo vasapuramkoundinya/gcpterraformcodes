@@ -10,9 +10,16 @@
   enable_retention_policy_lock = "true"
   logging_bucket = "terraform-state-gcp-narasi"
    public_access_prevention = "enabled"
-   labels = var.labels
+   #labels = var.labels
    kms_key_name = "projects/neural-sunup-416408/locations/global/keyRings/ebsvolume/cryptoKeys/ebs"
    soft_delete_retention_seconds = "100004"
+
+   labels = {
+  environment = "dev"
+  application = "neuralspun"
+  owner       = "devops"
+  team        = "platform"
+  }
 
     lifecycle_rules = [
     {
