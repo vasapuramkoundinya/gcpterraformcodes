@@ -11,26 +11,28 @@
   delete_bgp_always_compare_med = "false"
   deletion_policy = "DELETE"
   delete_default_routes_on_create = "false"
-purpose = "none"
+
 subnets = {
 
   app = {
     subnet_name = "app-subnet"
     subnet_cidr = "10.10.1.0/24"
     region      = "us-central1"
+    purpose = "none"
   }
 
   db = {
     subnet_name = "db-subnet"
     subnet_cidr = "10.10.2.0/24"
     region      = "us-central1"
+    purpose = "none"
   }
 
   gke = {
     subnet_name = "gke-subnet"
     subnet_cidr = "10.10.3.0/24"
     region      = "us-central1"
-
+    purpose = "PRIVATE"
     private_google_access = true
 
     secondary_ranges = [

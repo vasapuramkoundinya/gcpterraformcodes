@@ -21,11 +21,12 @@ resource "google_compute_subnetwork" "subnets" {
   name          = each.value.subnet_name
   ip_cidr_range = each.value.subnet_cidr
   region        = each.value.region
-  purpose = var.purpose
+  #purpose = var.purpose
 
   network = google_compute_network.this.id
 
   private_ip_google_access =each.value.private_google_access
+  purpose = lookup(each.value, "purpose", null)
 
   dynamic "secondary_ip_range" {
 

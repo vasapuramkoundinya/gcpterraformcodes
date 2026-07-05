@@ -1,5 +1,4 @@
-
-/**module "neural_compute_components" {
+module "neural_compute_components" {
     source = "../../../../resource/vpc"
     vpc_name = var.vpc_name
     description =  var.description
@@ -16,4 +15,4 @@
   delete_default_routes_on_create = var.delete_default_routes_on_create 
   subnets = var.subnets
   purpose = var.purpose
-}**/
+}
