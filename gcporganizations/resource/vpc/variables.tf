@@ -9,13 +9,13 @@ variable "bgp_inter_region_cost"{}
 variable "delete_bgp_always_compare_med"{}
 variable "deletion_policy"{}
 variable "delete_default_routes_on_create"{}
-variable "purpose" {}
+#variable "purpose" {}
 variable "subnets" {
   type = map(object({
     subnet_name      = string
     subnet_cidr      = string
     region           = string
-    #purpose = string
+    purpose = optional(string)
 
     private_google_access = optional(bool, false)
 
