@@ -14,5 +14,4 @@ module "neural_compute_components" {
   deletion_policy = var.deletion_policy 
   delete_default_routes_on_create = var.delete_default_routes_on_create 
   subnets = var.subnets
-  #purpose = var.purpose
 }
