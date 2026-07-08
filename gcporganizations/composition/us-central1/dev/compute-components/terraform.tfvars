@@ -20,6 +20,7 @@ subnets = {
     region      = "us-central1"
     purpose = ""
     stack_type = "IPV4_ONLY"
+    enable_flow_logs = false
   }
 
   db = {
@@ -28,6 +29,7 @@ subnets = {
     region      = "us-central1"
     purpose = "none"
      stack_type = "IPV4_ONLY"
+     enable_flow_logs = false
   }
 
   gke = {
@@ -37,6 +39,7 @@ subnets = {
     purpose = "PRIVATE"
     private_google_access = true
      stack_type = "IPV4_ONLY"
+     enable_flow_logs = false
 
     secondary_ranges = [
       {

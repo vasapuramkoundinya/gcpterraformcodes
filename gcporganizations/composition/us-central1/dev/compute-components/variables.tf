@@ -18,6 +18,7 @@ variable "subnets" {
     stack_type = string
 
     private_google_access = optional(bool, false)
+    enable_flow_logs       = optional(bool, false)
 
     secondary_ranges = optional(list(object({
       range_name = string
