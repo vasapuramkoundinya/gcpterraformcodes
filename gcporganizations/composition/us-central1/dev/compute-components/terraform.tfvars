@@ -19,6 +19,7 @@ subnets = {
     subnet_cidr = "10.10.1.0/24"
     region      = "us-central1"
     purpose = "none"
+    stack_type = "IPV4_ONLY"
   }
 
   db = {
@@ -26,6 +27,7 @@ subnets = {
     subnet_cidr = "10.10.2.0/24"
     region      = "us-central1"
     purpose = "none"
+     stack_type = "IPV4_ONLY"
   }
 
   gke = {
@@ -34,6 +36,7 @@ subnets = {
     region      = "us-central1"
     purpose = "PRIVATE"
     private_google_access = true
+     stack_type = "IPV4_ONLY"
 
     secondary_ranges = [
       {

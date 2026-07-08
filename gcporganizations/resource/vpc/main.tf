@@ -22,6 +22,7 @@ resource "google_compute_subnetwork" "subnets" {
   ip_cidr_range = each.value.subnet_cidr
   region        = each.value.region
   #purpose = var.purpose
+  stack_type = each.value.stack_type
 
   network = google_compute_network.this.id
 
@@ -37,9 +38,13 @@ resource "google_compute_subnetwork" "subnets" {
       ip_cidr_range = secondary_ip_range.value.cidr
     }
   }
-  log_config {
+  dynamic "log_config" {
+  for_each = each.value.enable_flow_logs ? [1] : []
+
+  content {
     aggregation_interval = "INTERVAL_10_MIN"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
+  }
   }
 }
