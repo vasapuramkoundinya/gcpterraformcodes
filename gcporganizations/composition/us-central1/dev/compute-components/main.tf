@@ -1,4 +1,4 @@
-module "neural_compute_components" {
+/*module "neural_compute_components" {
     source = "../../../../resource/vpc"
     vpc_name = var.vpc_name
     description =  var.description
@@ -14,4 +14,4 @@ module "neural_compute_components" {
   deletion_policy = var.deletion_policy 
   delete_default_routes_on_create = var.delete_default_routes_on_create 
   subnets = var.subnets
-}
+}*/
