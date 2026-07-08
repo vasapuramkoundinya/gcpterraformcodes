@@ -16,6 +16,7 @@ variable "subnets" {
     subnet_cidr      = string
     region           = string
     purpose = optional(string)
+    stack_type = string
 
     private_google_access = optional(bool, false)
 
