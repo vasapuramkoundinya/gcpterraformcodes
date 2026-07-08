@@ -10,7 +10,7 @@
   bgp_inter_region_cost = "ADD_COST_TO_MED"     
   delete_bgp_always_compare_med = "false"
   deletion_policy = "DELETE"
-  delete_default_routes_on_create = "false"
+  delete_default_routes_on_create = true
 
 subnets = {
 
