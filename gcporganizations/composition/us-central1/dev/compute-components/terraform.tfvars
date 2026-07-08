@@ -27,7 +27,7 @@ subnets = {
     subnet_name = "db-subnet"
     subnet_cidr = "10.10.2.0/24"
     region      = "us-central1"
-    purpose = "none"
+    purpose = "PRIVATE"
      stack_type = "IPV4_ONLY"
      enable_flow_logs = false
   }
