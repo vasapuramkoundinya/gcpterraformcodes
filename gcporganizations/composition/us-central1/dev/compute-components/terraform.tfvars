@@ -18,7 +18,7 @@ subnets = {
     subnet_name = "app-subnet"
     subnet_cidr = "10.10.1.0/24"
     region      = "us-central1"
-    purpose = "none"
+    purpose = ""
     stack_type = "IPV4_ONLY"
   }
 
