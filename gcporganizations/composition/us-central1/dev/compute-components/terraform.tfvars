@@ -20,7 +20,7 @@ subnets = {
     region      = "us-central1"
     purpose = ""
     stack_type = "IPV4_ONLY"
-    enable_flow_logs = false
+    enable_flow_logs = true
   }
 
   db = {
