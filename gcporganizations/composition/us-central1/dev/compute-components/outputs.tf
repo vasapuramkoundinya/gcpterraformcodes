@@ -1,3 +1,3 @@
-output "network_id" {
+/*output "network_id" {
   value = module.neural_compute_components.network_id
-}
+}*/
