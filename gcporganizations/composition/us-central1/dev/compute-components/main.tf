@@ -1,4 +1,4 @@
-module "neural_compute_components" {
+/*module "neural_compute_components" {
     source = "../../../../resource/vpc"
     vpc_name = var.vpc_name
     description =  var.description
@@ -25,4 +25,4 @@ module "cloud_router" {
   region = var.region
   network = module.neural_compute_components.network_id
   router = var.router
-}
+}*/
