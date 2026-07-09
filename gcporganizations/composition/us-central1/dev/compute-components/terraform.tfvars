@@ -63,7 +63,7 @@ router_description = "Cloud Router for Dev VPC"
 
 #asn = 64514
 
-region = "eu-central1"
+region = "us-central1"
 
 router = {
   bgp = {
