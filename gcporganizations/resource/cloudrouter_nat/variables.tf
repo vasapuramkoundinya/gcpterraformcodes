@@ -25,7 +25,7 @@ variable "router" {
 
     bgp = optional(object({
       asn               = optional(number, 64514)
-      keepalive_interval = optional(number)
+      keepalive_interval = number
       identifier_range = optional(string)
       advertise_mode    = optional(string, "DEFAULT")
       advertised_groups = optional(list(string), [])
