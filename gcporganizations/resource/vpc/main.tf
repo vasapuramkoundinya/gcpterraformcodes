@@ -48,3 +48,5 @@ resource "google_compute_subnetwork" "subnets" {
   }
   }
 }
+
+

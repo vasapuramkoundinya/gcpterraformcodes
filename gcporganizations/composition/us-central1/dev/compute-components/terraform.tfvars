@@ -53,3 +53,41 @@ subnets = {
     ]
   }
 }
+
+
+###Cloud Router Configuration ###
+
+router_name = "router-us-central1"
+
+router_description = "Cloud Router for Dev VPC"
+
+#asn = 64514
+
+region = "eu-central1"
+
+router = {
+  bgp = {
+
+    asn = 65010
+
+    keepalive_interval = "30"
+
+    #identifier_range =""
+
+    advertise_mode = "DEFAULT"
+    /*
+    advertised_groups = [
+      "ALL_SUBNETS"
+    ]
+
+    advertised_ip_ranges = [
+      {
+        range       = "10.10.0.0/16"
+        description = "Application Network"
+      },
+      {
+        range = "10.20.0.0/16"
+      }
+    ]*/
+  }
+}

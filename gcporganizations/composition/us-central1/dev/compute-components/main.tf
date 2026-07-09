@@ -1,4 +1,4 @@
-/*module "neural_compute_components" {
+module "neural_compute_components" {
     source = "../../../../resource/vpc"
     vpc_name = var.vpc_name
     description =  var.description
@@ -14,4 +14,15 @@
   deletion_policy = var.deletion_policy 
   delete_default_routes_on_create = var.delete_default_routes_on_create 
   subnets = var.subnets
-}*/
+}
+
+
+module "cloud_router" {
+  source = "../../../../resource/cloudrouter_nat"
+  router_name = var.router_name
+  router_description = var.router_description
+  project_id = var.project_id
+  region = var.region
+  network = module.neural_compute_components.network_id
+  router = var.router
+}
