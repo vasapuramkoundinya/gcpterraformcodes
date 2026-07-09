@@ -23,6 +23,6 @@ module "cloud_router" {
   router_description = var.router_description
   project_id = var.project_id
   region = var.region
-  network = module.neural_compute_components.network_id
+  network = module.neural_compute_components.id
   router = var.router
 }
